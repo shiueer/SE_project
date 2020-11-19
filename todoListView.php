@@ -3,7 +3,7 @@ session_start();
 if (! isset($_SESSION['uID']) or $_SESSION['uID']<="") {
 	header("Location: loginForm.php");
 } 
-if ($_SESSION['uID']=='boss'){
+if ($_SESSION['uID']){
 	$bossMode = 1;
 } else {
 	$bossMode=0;
@@ -26,16 +26,17 @@ $jobStatus = array('未完成','已完成','已結案','已取消');
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-<title>無標題文件</title>
+<title>Apply System</title>
 </head>
 
 <body>
 
-<p>my Todo List !! </p>
+<h1>My Apply List !! </h1>
 <hr />
 <div><?php echo $msg; ?></div><hr>
-<a href="loginForm.php">login</a> | <a href="todoEditForm.php?id=-1">Add Task</a> <br>
-<table width="200" border="1">
+<a href="loginForm.php"><button>OUT</button></a> | <a href="todoEditForm.php?id=-1"><button>Add Apply</button></a> <br>
+<br/>
+<table width="auto" border="1" style="text-align: center;">
   <tr>
     <td>id</td>
     <td>title</td>
@@ -65,8 +66,9 @@ while (	$rs=mysqli_fetch_assoc($result)) {
 
 	if ($rs['diff']>$timeLimit) {
 		$fontColor="red";
-	} else {
-		$fontColor="black";		
+	}
+	else {
+		$fontColor="black";	
 	}
 
 	echo "<tr style='background-color:$bgColor;'><td>" . $rs['id'] . "</td>";
