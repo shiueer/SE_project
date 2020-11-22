@@ -1,9 +1,9 @@
 <?php
 require_once("dbconnect.php");
 
-function addJob($title,$msg, $urgent) {
+function addJob($ID, $Name, $sID, $FName, $MName, $Income_status, $Note, $T_admit, $S_admit, $Amount, $S_note, $P_admit) {
 	global $conn;
-	$sql = "insert into todo (title, content,urgent, addTime, status) values ('$title','$msg', '$urgent', NOW(),0);";
+	$sql = "insert into apply_content (ID, Name, sID, FName, MName, Income_status, Note, T_admit, S_admit, Amount, S_note, P_admit) values ('$ID','$Name', '$sID', '$FName', '$MName', '', '', '', '', '', '', '');";
 	mysqli_query($conn, $sql) or die("Insert failed, SQL query error"); //執行SQL	
 }
 
@@ -14,30 +14,31 @@ function cancelJob($jobID) {
 	//return T/F
 }
 
-function updateJob($id,$title,$msg, $urgent) {
+function updateJob($ID, $Name, $sID, $FName, $MName, $Income_status, $Note, $T_admit, $S_admit, $Amount, $S_note, $P_admit) {
 	global $conn;
-	if ($id== -1) {
-		addJob($title,$msg, $urgent);
+	if ($ID == -1) {
+		addJob($ID, $Name, $sID, $FName, $MName, $Income_status, $Note, $T_admit, $S_admit, $Amount, $S_note, $P_admit);
 	} else {
-		$sql = "update todo set title='$title', content='$msg', urgent='$urgent' where id=$id;";
+		$sql = "update apply_content set Name, sID, FName, MName, Income_status, Note, T_admit, S_admit, Amount, S_note, P_admit where ID=$ID;";
 		mysqli_query($conn, $sql) or die("Insert failed, SQL query error"); //執行SQL
 	}
 }
 
-function getJobList($bossMode) {
+function getJobList($userName, $role) {
 	global $conn;
-	if ($bossMode) {
-		$sql = "select *, TIME_TO_SEC(TIMEDIFF(NOW(), addTime)) diff from todo order by status, urgent desc;";
-	} else {
-		$sql = "select *, TIME_TO_SEC(TIMEDIFF(NOW(), addTime)) diff from todo where status = 0;";
+	if ($role==0) {
+		$sql = "select * from apply_content where sID=$userName;";
+	}
+	else{
+		$sql = "select * from apply_content where 1;";
 	}
 	$result=mysqli_query($conn,$sql) or die("DB Error: Cannot retrieve message.");
 	return $result;
 }
 
-function getJobDetail($id) {
+function getJobDetail($ID) {
 	global $conn;
-	if ($id == -1) { //-1 stands for adding a new record
+	if ($ID == -1) { //-1 stands for adding a new record
 		$rs=[
 			"id" => -1,
 			"title" => "new title",
