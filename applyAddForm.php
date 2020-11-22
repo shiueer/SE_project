@@ -21,9 +21,9 @@
       </tr>
       <tr>
         <td>申請補助總類 :</td>
-        <td><input type="radio" name = "Income_status" value = "0" checked disabled><label>低收入戶</label>
-            <input type="radio" name = "Income_status" value = "1" checked disabled><label>中低收入戶</label>
-            <input type="radio" name = "Income_status" value = "2" checked disabled><label>家庭突發因素</label>
+        <td><input type="radio" name = "Income_status" value = "0" ><label>低收入戶</label>
+            <input type="radio" name = "Income_status" value = "1" ><label>中低收入戶</label>
+            <input type="radio" name = "Income_status" value = "2" ><label>家庭突發因素</label>
         </td>
       </tr>
       <tr>

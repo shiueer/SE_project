@@ -3,7 +3,7 @@ require_once("dbconnect.php");
 
 function addJob($ID, $Name, $sID, $FName, $MName, $Income_status, $Note, $T_admit, $S_admit, $Amount, $S_note, $P_admit) {
 	global $conn;
-	$sql = "insert into apply_content (ID, Name, sID, FName, MName, Income_status, Note, T_admit, S_admit, Amount, S_note, P_admit) values ('$ID','$Name', '$sID', '$FName', '$MName', '', '', '', '', '', '', '');";
+	$sql = "insert into apply_content (ID, Name, sID, FName, MName, Income_status, Note, T_admit, S_admit, Amount, S_note, P_admit) values ('$ID','$Name', '$sID', '$FName', '$MName', '$Income_status', '', '', '', '', '', '');";
 	mysqli_query($conn, $sql) or die("Insert failed, SQL query error"); //執行SQL	
 }
 
