@@ -1,13 +1,13 @@
 <?php
 session_start();
-if (! isset($_SESSION['uID']) or $_SESSION['uID']!="boss") {
+if (! isset($_SESSION['uID']) or $_SESSION['rID']== 0) {
 	header("Location: loginForm.php");
 } 
 
 require("todoModel.php");
 
-$id = (int)$_GET['id'];
-$rs = getJobDetail($id);
+$ID = (int)$_GET['ID'];
+$rs = getJobDetail($ID);
 if (! $rs) {
 	echo "no data found";
 	exit(0);
