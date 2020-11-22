@@ -2,24 +2,9 @@
 session_start();
 if (! isset($_SESSION['uID']) or $_SESSION['uID']<="") {
 	header("Location: loginForm.php");
-} 
-if ($_SESSION['uID']){
-	$bossMode = 1;
-} else {
-	$bossMode=0;
-}
+}	
 require("todoModel.php");
-if (isset($_GET['m'])){
-	$msg="<font color='red'>" . $_GET['m'] . "</font>";
-} else {
-	$msg="Good morning";
-}
-
-
-
-$result=getJobList($bossMode);
-$jobStatus = array('未完成','已完成','已結案','已取消');
-
+$result=getJobList($_SESSION['uID'],$_SESSION['rID']) or die("DB Error: Cannot retrieve message.");
 
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
@@ -31,71 +16,73 @@ $jobStatus = array('未完成','已完成','已結案','已取消');
 
 <body>
 
-<h1>My Apply List !! </h1>
+<h1>My Apply List !!</h1>
 <hr />
-<div><?php echo $msg; ?></div><hr>
-<a href="loginForm.php"><button>OUT</button></a> | <a href="todoEditForm.php?id=-1"><button>Add Apply</button></a> <br>
+<a href="loginForm.php"><button>OUT</button></a> | 
+<?php
+if($_SESSION['rID'] == 0){
+	echo "<a href='applyAddForm.php?id=-1'><button>Add Apply</button></a> <br>";
+}
+else{
+	echo "<a href='todoEditForm.php?id=-1'><button>Add Apply</button></a> <br>";
+}
+?>
 <br/>
 <table width="auto" border="1" style="text-align: center;">
   <tr>
-    <td>id</td>
-    <td>title</td>
-    <td>message</td>
-	<td>Urgency</td>
-    <td>status</td>
-	<td>time used</td>
-	<td>-</td>
+    <td>No.</td>
+	<td>姓名</td>
+	<td>學號</td>
+    <td>父親姓名</td>
+	<td>母親姓名</td>
+	<td>申請補助種類</td>
+	<td>導師訪視說明</td>
+	<td>導師同意</td>
+	<td>秘書同意</td>
+	<td>補助金額</td>
+	<td>審查意見</td>
+	<td>校長同意</td>
   </tr>
 <?php
-
-while (	$rs=mysqli_fetch_assoc($result)) {
-	switch($rs['urgent']) {
-		case '緊急':
-			$bgColor="#ff9999";
-			$timeLimit = 60;
-			break;
-		case '重要':
-			$bgColor="#99ff99";
-			$timeLimit = 120;
-			break;
-		default:
-			$bgColor="#ffffff";
-			$timeLimit = 180;
-			break;
+	while (	$rs=mysqli_fetch_assoc($result)) {
+	  echo "<tr><td>" . $rs['ID'] . "</td>";
+	  echo "<td>" . $rs['Name'] . "</td>";
+	  echo "<td>" . $rs['sID'] , "</td>";
+	  echo "<td>" . $rs['FName'] ,"</td>";
+	  echo "<td>" . $rs['MName'] ,"</td>";
+	  if($rs['Income_status'] == 0){
+		echo "<td>低收入戶</td>";
+	  }
+	  if($rs['Income_status'] != 0){
+		if($rs['Income_status'] == 1){
+		  echo "<td>中低收入戶</td>";
+		}
+		else{
+		  echo "<td>家庭突發因素</td>";
+		}
+	  }
+	  echo "<td>" . $rs['Note'] ,"</td>";
+	  if($rs['T_admit'] == 1){
+		echo "<td bgcolor = #72fb6f>通過</td>";
+	  }
+	  else{
+		echo "<td bgcolor = #fe6158>未通過</td>";
+	  }
+	  if($rs['S_admit'] == 1){
+		echo "<td bgcolor = #72fb6f>通過</td>";
+	  }
+	  else{
+		echo "<td bgcolor = #fe6158>未通過</td>";
+	  }
+	  echo "<td>" . $rs['Amount'] ,"</td>";
+	  echo "<td>" . $rs['S_note'] ,"</td>";
+	  if($rs['P_admit'] == 1){
+		echo "<td bgcolor = #72fb6f>通過</td>";
+	  }
+	  else{
+		echo "<td bgcolor = #fe6158>未通過</td>";
+	  }
 	}
-
-	if ($rs['diff']>$timeLimit) {
-		$fontColor="red";
-	}
-	else {
-		$fontColor="black";	
-	}
-
-	echo "<tr style='background-color:$bgColor;'><td>" . $rs['id'] . "</td>";
-	echo "<td>{$rs['title']}</td>";
-	echo "<td>" , htmlspecialchars($rs['content']), "</td>";
-	echo "<td>" , htmlspecialchars($rs['urgent']), "</td>";
-	echo "<td>{$jobStatus[$rs['status']]}</td>" ;
-	echo "<td><font color='$fontColor'>{$rs['diff']}</font></td><td>";
-	switch($rs['status']) {
-		case 0:
-			if ($bossMode) {
-				echo "<a href='todoEditForm.php?id={$rs['id']}'>Edit</a>  ";	
-				echo "<a href='todoSetControl.php?act=cancel&id={$rs['id']}'>Cancel</a>  " ;
-			} else {
-				echo "<a href='todoSetControl.php?act=finish&id={$rs['id']}'>Finish</a>  ";
-			}
-
-			break;
-		case 1:
-			echo "<a href='todoSetControl.php?act=reject&id={$rs['id']}'>Reject</a>  ";
-			echo "<a href='todoSetControl.php?act=close&id={$rs['id']}'>Close</a>  ";
-			break;
-		default:
-			break;
-	}
-	echo "</td></tr>";
-}
 ?>
 </table>
 </body>
