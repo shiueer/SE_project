@@ -4,13 +4,16 @@ require("userModel.php");
 
 $userName = $_POST['id'];
 $passWord = $_POST['pwd'];//接收網頁上的input
-$role = $_POST['role'];//設置變數存放
 
-if (checkUserIDPwd($userName, $passWord,$role)) {
+if (checkUserIDPwd($userName, $passWord)) {
 	$_SESSION['uID'] = $userName;
+	$_SESSION['rID'] = getUserRole($userName);
+	//echo $userName, "roleID:".$_SESSION['rID'];
 	header("Location: todoListView.php");
 } else {
-	$_SESSION['uID']="";
-	header("Location: loginForm.php");
+	echo'12345689';
+	$_SESSION['uID'] = "";
+	$_SESSION['rID'] = "";
+	// header("Location: loginForm.php");
 }
 ?>
