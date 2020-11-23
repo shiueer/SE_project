@@ -31,7 +31,7 @@
             導師訪視說明 :
         </td>
         <td>
-            <input name="title" type="text" id="title" readonly />
+            <input type="text" name="Note" id="title" readonly />
         </td>
         </tr>
         <tr>
@@ -39,28 +39,27 @@
             導師簽章
         </td>
         <td>
-            <input type="radio" name = "role" value = "2" checked disabled><label>同意</label>
+            <input type="radio" name = "T_amdit" value = "0" checked disabled><label>同意</label>
         </td>
       </tr>
       <tr>
         <td>秘書審核 :</td>
         <td>
-          <input type="radio" name = "role" value = "2" checked disabled ><label></label>准於補助
-          <input name="title" type="text" id="title" readonly />元</th>
+          <input type="radio" name = "S_admit" value = "0" checked disabled ><label></label>准於補助
+          <input type="text" name="Amount" readonly />元</th>
         </td>
       </tr>
       </tr>
       <tr>
         <td>秘書審查意見 :</td>
         <td>
-        <input name="title" type="text" id="title" readonly/>
+        <input  type="text" name="S_note" readonly/>
       </tr>
       <tr>
         </td>
         <td>校長簽章</td>
-        <td><input type="radio" name = "role" value = "2" checked disabled><label>同意</label></td>
+        <td><input type="radio" name = "P_admit" value = "0" checked disabled><label>同意</label></td>
       </tr>
-    </thead> 
 </table>
 <br/>
 <input type="submit">

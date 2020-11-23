@@ -2,74 +2,57 @@
 require_once("dbconnect.php");
 
 function addJob($ID, $Name, $sID, $FName, $MName, $Income_status, $Note, $T_admit, $S_admit, $Amount, $S_note, $P_admit) {
-	global $conn;
-	$sql = "insert into apply_content (ID, Name, sID, FName, MName, Income_status, Note, T_admit, S_admit, Amount, S_note, P_admit) values ('$ID','$Name', '$sID', '$FName', '$MName', '$Income_status', '', '', '', '', '', '');";
-	mysqli_query($conn, $sql) or die("Insert failed, SQL query error"); //執行SQL	
+    global $conn;
+    $sql = "INSERT INTO apply_content (ID, Name, sID, FName, MName, Income_status, Note, T_admit, S_admit, Amount, S_note, P_admit) values ('$ID','$Name', '$sID', '$FName', '$MName', '$Income_status', '', '', '', '', '', '');";
+    mysqli_query($conn, $sql) or die("Insert failed, SQL query error"); //執行SQL    
 }
 
-function cancelJob($jobID) {
-	global $conn;
-	$sql = "update todo set status = 3 where id=$jobID and status <> 2;";
-	mysqli_query($conn,$sql);
-	//return T/F
-}
-
-function updateJob($ID, $Name, $sID, $FName, $MName, $Income_status, $Note, $T_admit, $S_admit, $Amount, $S_note, $P_admit) {
-	global $conn;
-	if ($ID == -1) {
-		addJob($ID, $Name, $sID, $FName, $MName, $Income_status, $Note, $T_admit, $S_admit, $Amount, $S_note, $P_admit);
-	} else {
-		$sql = "update apply_content set Name, sID, FName, MName, Income_status, Note, T_admit, S_admit, Amount, S_note, P_admit where ID=$ID;";
-		mysqli_query($conn, $sql) or die("Insert failed, SQL query error"); //執行SQL
-	}
+function updateJob($ID, $Note, $T_admit, $S_admit, $Amount, $S_note, $P_admit, $role) {
+    global $conn;
+    $ID = (int) $ID;
+    switch($role) {
+        case 1 :
+            $sql = "UPDATE apply_content SET Note='$Note', T_admit=$T_admit WHERE ID=$ID;";
+            mysqli_query($conn, $sql) or die("Update failed, SQL query error"); //執行SQL
+            break;
+        case 2:
+            $sql = "UPDATE apply_content SET S_admit='$S_admit', Amount='$Amount', S_note='$S_note' WHERE ID=$ID;";
+            mysqli_query($conn, $sql) or die("Update failed, SQL query error"); //執行SQL
+            break;
+        case 3:
+            $sql = "UPDATE apply_content SET P_admit='$P_admit' WHERE ID=$ID;" ;
+            mysqli_query($conn, $sql) or die("Update failed, SQL query error"); //執行SQL
+            break;
+    }
+    
 }
 
 function getJobList($userName, $role) {
-	global $conn;
-	if ($role==0) {
-		$sql = "select * from apply_content where sID=$userName;";
-	}
-	else{
-		$sql = "select * from apply_content where 1;";
-	}
-	$result=mysqli_query($conn,$sql) or die("DB Error: Cannot retrieve message.");
-	return $result;
+    global $conn;
+    switch($role) {
+        case 0 :
+            $sql = "SELECT * FROM apply_content WHERE sID=$userName;";
+            break;
+        case 1 :
+            $sql = "SELECT * FROM apply_content WHERE T_admit=0;";
+            break;
+        case 2 :
+            $sql = "SELECT * FROM apply_content WHERE T_admit=1 AND S_admit=0;";
+            break;
+        case 3 :
+            $sql = "SELECT * FROM apply_content WHERE T_admit=1 AND S_admit=1 AND P_admit=0;";
+            break;
+    }
+    $result=mysqli_query($conn,$sql) or die("DB Error: Cannot retrieve message.");
+    return $result;
 }
 
 function getJobDetail($ID) {
-	global $conn;
-	if ($ID == -1) { //-1 stands for adding a new record
-		$rs=[
-			"id" => -1,
-			"title" => "new title",
-			"content" => "job description",
-			"urgent" => "一般"
-		];
-	} else {
-		$sql = "select id, title, content, urgent from todo where id=$id;";
-		$result=mysqli_query($conn,$sql) or die("DB Error: Cannot retrieve message.");
-		$rs=mysqli_fetch_assoc($result);
-	}
-	return $rs;
-}
-
-function setFinished($jobID) {
-	global $conn;
-	$sql = "update todo set status = 1, finishTime=NOW() where id=$jobID and status = 0;";
-	mysqli_query($conn,$sql) or die("MySQL query error"); //執行SQL
-	
-}
-
-function rejectJob($jobID){
-	global $conn;
-	$sql = "update todo set status = 0 where id=$jobID and status = 1;";
-	mysqli_query($conn,$sql);
-}
-
-function setClosed($jobID) {
-	global $conn;
-	$sql = "update todo set status = 2 where id=$jobID and status = 1;";
-	mysqli_query($conn,$sql);
+    global $conn;
+    $sql = "SELECT * FROM apply_content WHERE ID=$ID;";
+    $result=mysqli_query($conn,$sql) or die("DB Error: Cannot retrieve message.");
+    $rs=mysqli_fetch_assoc($result);
+    return $rs;
 }
 
 

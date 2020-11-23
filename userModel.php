@@ -22,7 +22,7 @@ function checkUserIDPwd($userName, $passWord) {
 
 function getUserRole($userName) {
     global $conn;
-    $sql = "select Role from user where LoginID=$userName";
+    $sql = "select Role from user WHERE LoginID=$userName";
     $result = mysqli_query($conn,$sql) or die("DB Error: Cannot retrieve message.");
     $row = mysqli_fetch_assoc($result);
     return $row['Role'];
